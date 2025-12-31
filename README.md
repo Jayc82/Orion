@@ -92,22 +92,27 @@ cargo build --release
 
 - [`docs/DOCKER.md`](docs/DOCKER.md) - **🐳 Docker setup guide** (SOLVES DEPENDENCY ISSUES)
 - [`docs/FRONTIER_INTEGRATION.md`](docs/FRONTIER_INTEGRATION.md) - **⭐ Complete guide to integrate Frontier template** (RECOMMENDED)
+- [`docs/WALLET_INTEGRATION.md`](docs/WALLET_INTEGRATION.md) - **👛 MetaMask & Polkadot.js wallet setup**
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Technical architecture and design decisions
 - [`docs/RUNNING_LOCALLY.md`](docs/RUNNING_LOCALLY.md) - Step-by-step guide to build and run locally
 - [`contracts/README.md`](contracts/README.md) - Smart contract deployment guide
+- [`examples/simple-dapp/`](examples/simple-dapp/) - Example dApp with wallet integration
 
 ### Development Status
 
-🚧 **Current Phase**: Initial scaffold with stubs
+🚧 **Current Phase**: Full Frontier integration with wallet support
 
-This is an intentionally lightweight scaffold to enable fast iteration. The next steps are:
+Progress:
 
 1. ✅ Repository structure and documentation
 2. ✅ Minimal buildable stubs with clear integration instructions
-3. 🔄 Integrate full Substrate node template with Frontier
-4. 🔄 Deploy to local testnet
-5. 🔄 Public testnet with multiple validators
-6. 🔄 Mainnet preparation and security audits
+3. ✅ Integrate full Substrate node template with Frontier
+4. ✅ Docker deployment solution
+5. ✅ Wallet integration (MetaMask & Polkadot.js)
+6. ✅ Example dApp with contract interaction
+7. 🔄 Deploy to local testnet
+8. 🔄 Public testnet with multiple validators
+9. 🔄 Mainnet preparation and security audits
 
 ### Contributing
 
@@ -124,11 +129,20 @@ Please see issues labeled with `help-wanted` or `good-first-issue`.
 
 Track the development progress:
 
-- **Issue #1**: Integrate full Substrate node template with Frontier
-- **Issue #2**: Add polkadot-js web UI example and wallet integration  
-- **Issue #3**: Add multi-node testnet deployment scripts
+- **Issue #1**: ✅ Integrate full Substrate node template with Frontier (COMPLETED)
+- **Issue #2**: ✅ Add polkadot-js web UI example and wallet integration (COMPLETED)
+- **Issue #3**: 🔄 Add multi-node testnet deployment scripts (NEXT)
 
-(Issue numbers will be updated once created)
+### Quick Test: Example dApp
+
+After starting your node with Docker:
+
+1. Open [`examples/simple-dapp/index.html`](examples/simple-dapp/index.html) in your browser
+2. Click "Connect MetaMask"
+3. Import a development account (see [`docs/WALLET_INTEGRATION.md`](docs/WALLET_INTEGRATION.md))
+4. Try sending ORN or interacting with contracts!
+
+See [`examples/simple-dapp/README.md`](examples/simple-dapp/README.md) for complete instructions.
 
 ### Resources
 
