@@ -113,7 +113,14 @@ solc --bin --abi --optimize contracts/*.sol
 
 ## Development Accounts
 
+> **⚠️ CRITICAL WARNING**: These accounts are FOR DEVELOPMENT/TESTING ONLY!  
+> **NEVER** use these private keys in production or on any public network.  
+> **ALWAYS** generate new keys for production deployment using hardware wallets.
+
 ### Ethereum-Style (EVM)
+
+**Full account details in**: [`docs/WALLET_INTEGRATION.md`](WALLET_INTEGRATION.md)
+
 ```
 Alith:     0xf24FF3a9CF04c71Dbc94D0b566f7A27B94566cac
            Private: 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133
@@ -132,7 +139,7 @@ Bob:     5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
 Charlie: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y
 ```
 
-**⚠️ Development Only**: Never use these accounts in production!
+> **Production Key Generation**: See `docs/SECURITY.md` for hardware wallet setup and secure key generation procedures.
 
 ## Smart Contract Deployment
 

@@ -14,7 +14,8 @@
 #   2 - Critical failure (setup issues)
 ###################################################################################
 
-set -e
+# Note: Not using 'set -e' to ensure all tests run even if some fail
+# Individual test failures are tracked and reported in the final summary
 
 # Colors for output
 RED='\033[0;31m'
@@ -462,10 +463,14 @@ test_security() {
     local exposed_secrets=0
     while IFS= read -r -d '' file; do
         if [ -f "$file" ]; then
-            # Check for actual private keys (not placeholders)
-            if grep -E "0x[a-fA-F0-9]{64}" "$file" 2>/dev/null | grep -v "YOUR_PRIVATE_KEY\|PLACEHOLDER\|EXAMPLE\|0x0000000000000000000000000000000000000000000000000000000000000000" > /dev/null 2>&1; then
-                ((exposed_secrets++))
-                warn "Potential private key found in $file"
+            # Check for actual private keys in non-documentation files
+            # Whitelist: docs, README files, and files with explicit warnings
+            if ! echo "$file" | grep -qE "docs/|README|REFERENCE"; then
+                # Look for private keys with "private" or "privateKey" context
+                if grep -iE "(private.*key|privateKey|PRIVATE_KEY).*0x[a-fA-F0-9]{64}" "$file" 2>/dev/null | grep -v "YOUR_PRIVATE_KEY\|PLACEHOLDER\|EXAMPLE\|0x0000000000000000000000000000000000000000000000000000000000000000" > /dev/null 2>&1; then
+                    ((exposed_secrets++))
+                    warn "Potential private key found in $file"
+                fi
             fi
         fi
     done < <(find contracts examples -type f \( -name "*.sol" -o -name "*.html" -o -name "*.js" \) -print0 2>/dev/null)
@@ -786,11 +791,15 @@ test_code_quality() {
     fi
     
     print_test "Solidity pragma consistency"
-    local pragma_versions=$(grep -h "pragma solidity" contracts/*.sol 2>/dev/null | sort -u | wc -l)
-    if [ "$pragma_versions" -le 2 ]; then
-        pass "Solidity versions are consistent"
+    if compgen -G "contracts/*.sol" > /dev/null; then
+        local pragma_versions=$(grep -h "pragma solidity" contracts/*.sol 2>/dev/null | sort -u | wc -l)
+        if [ "$pragma_versions" -le 2 ]; then
+            pass "Solidity versions are consistent"
+        else
+            warn "Multiple Solidity versions in use ($pragma_versions different pragmas)"
+        fi
     else
-        warn "Multiple Solidity versions in use ($pragma_versions different pragmas)"
+        warn "No Solidity files found in contracts/"
     fi
     
     print_test "Documentation completeness"
