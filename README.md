@@ -93,6 +93,7 @@ cargo build --release
 - [`docs/DOCKER.md`](docs/DOCKER.md) - **🐳 Docker setup guide** (SOLVES DEPENDENCY ISSUES)
 - [`docs/FRONTIER_INTEGRATION.md`](docs/FRONTIER_INTEGRATION.md) - **⭐ Complete guide to integrate Frontier template** (RECOMMENDED)
 - [`docs/WALLET_INTEGRATION.md`](docs/WALLET_INTEGRATION.md) - **👛 MetaMask & Polkadot.js wallet setup**
+- [`docs/TESTNET_DEPLOYMENT.md`](docs/TESTNET_DEPLOYMENT.md) - **🌐 Multi-node testnet deployment** (NEW)
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Technical architecture and design decisions
 - [`docs/RUNNING_LOCALLY.md`](docs/RUNNING_LOCALLY.md) - Step-by-step guide to build and run locally
 - [`contracts/README.md`](contracts/README.md) - Smart contract deployment guide
@@ -100,7 +101,7 @@ cargo build --release
 
 ### Development Status
 
-🚧 **Current Phase**: Full Frontier integration with wallet support
+🚧 **Current Phase**: Production testnet preparation
 
 Progress:
 
@@ -110,7 +111,7 @@ Progress:
 4. ✅ Docker deployment solution
 5. ✅ Wallet integration (MetaMask & Polkadot.js)
 6. ✅ Example dApp with contract interaction
-7. 🔄 Deploy to local testnet
+7. ✅ Multi-node local testnet deployment
 8. 🔄 Public testnet with multiple validators
 9. 🔄 Mainnet preparation and security audits
 

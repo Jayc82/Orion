@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'orion-validator-alice'
+    static_configs:
+      - targets: ['validator-alice:9615']
+        labels:
+          instance: 'alice'
+          validator: 'true'
+
+  - job_name: 'orion-validator-bob'
+    static_configs:
+      - targets: ['validator-bob:9615']
+        labels:
+          instance: 'bob'
+          validator: 'true'
+
+  - job_name: 'orion-validator-charlie'
+    static_configs:
+      - targets: ['validator-charlie:9615']
+        labels:
+          instance: 'charlie'
+          validator: 'true'
