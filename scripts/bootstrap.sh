@@ -1,23 +1,17 @@
 #!/usr/bin/env bash
 # Orion Substrate + EVM Bootstrap Script
 #
-# This script automates the setup of a local Substrate development node
-# with Frontier/EVM integration for the Orion blockchain.
+# This script provides guidance for integrating the Frontier template
+# into the Orion blockchain project.
 #
 # Usage: ./scripts/bootstrap.sh
 #
 # Prerequisites:
-#   - Rust toolchain (stable or nightly)
+#   - Rust toolchain (stable)
 #   - Git
 #   - Build essentials (gcc, make, etc.)
 #
-# This script is SAFE and NON-DESTRUCTIVE. It will:
-#   1. Check for required tools
-#   2. Clone the Substrate node template (if not present)
-#   3. Apply Frontier/EVM integration configuration
-#   4. Build the node binary
-#   5. Generate development chain spec
-#   6. Provide instructions to run the node
+# For detailed step-by-step instructions, see: docs/FRONTIER_INTEGRATION.md
 
 set -e  # Exit on error
 
@@ -25,16 +19,26 @@ set -e  # Exit on error
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
-
-# Configuration
-SUBSTRATE_TEMPLATE_DIR="substrate-node-template"
-NODE_BINARY="target/release/orion-node"
-CHAIN_SPEC_DIR="specs"
 
 echo "==================================================================="
 echo "  Orion Substrate + EVM Bootstrap"
 echo "==================================================================="
+echo ""
+
+echo -e "${BLUE}RECOMMENDED APPROACH:${NC}"
+echo "Use the official Frontier template for a production-ready implementation."
+echo ""
+echo "See the complete guide at: ${GREEN}docs/FRONTIER_INTEGRATION.md${NC}"
+echo ""
+echo "Quick summary:"
+echo "  1. Clone Frontier template: git clone --branch polkadot-v1.7.0 https://github.com/paritytech/frontier.git"
+echo "  2. Copy template files: cp -r frontier/template/* substrate-node/"
+echo "  3. Customize for Orion (ORN token, chain ID 1337)"
+echo "  4. Build: cargo build --release"
+echo ""
+echo -e "${YELLOW}==========================================================${NC}"
 echo ""
 
 # Step 1: Check prerequisites

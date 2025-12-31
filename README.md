@@ -18,6 +18,22 @@ The scaffold branch (`substrate-evm-scaffold`) includes:
 
 ### Quick Start
 
+**Option A: Use the Frontier Template (Recommended)**
+
+Follow the comprehensive integration guide:
+```bash
+# See detailed instructions in docs/FRONTIER_INTEGRATION.md
+cd /tmp
+git clone --depth 1 --branch polkadot-v1.7.0 https://github.com/paritytech/frontier.git
+cp -r frontier/template/* /path/to/Orion/substrate-node/
+cd /path/to/Orion/substrate-node
+# Customize for Orion (see docs/FRONTIER_INTEGRATION.md)
+cargo build --release
+./target/release/orion-node --dev --tmp
+```
+
+**Option B: Build from Stub**
+
 1. **Clone the repository and checkout the scaffold branch:**
    ```bash
    git clone https://github.com/Jayc82/Orion.git
@@ -25,19 +41,13 @@ The scaffold branch (`substrate-evm-scaffold`) includes:
    git checkout substrate-evm-scaffold
    ```
 
-2. **Build the minimal stub:**
-   ```bash
-   cd substrate-node
-   cargo build --release
-   ./target/release/orion-node
-   ```
-
-3. **Follow the setup guide:**
+2. **Follow the setup guide:**
+   - Read `docs/FRONTIER_INTEGRATION.md` for complete Frontier template integration ⭐ **RECOMMENDED**
    - Read `docs/ARCHITECTURE.md` for design decisions
    - Read `docs/RUNNING_LOCALLY.md` for complete setup instructions
    - Run `./scripts/bootstrap.sh` for guided integration
 
-4. **Deploy an example contract:**
+3. **Deploy an example contract:**
    - See `contracts/README.md` for Solidity deployment with Hardhat or Remix
    - Connect to local node at `http://127.0.0.1:9933`
 
@@ -61,6 +71,7 @@ The scaffold branch (`substrate-evm-scaffold`) includes:
 
 ### Documentation
 
+- [`docs/FRONTIER_INTEGRATION.md`](docs/FRONTIER_INTEGRATION.md) - **⭐ Complete guide to integrate Frontier template** (RECOMMENDED)
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Technical architecture and design decisions
 - [`docs/RUNNING_LOCALLY.md`](docs/RUNNING_LOCALLY.md) - Step-by-step guide to build and run locally
 - [`contracts/README.md`](contracts/README.md) - Smart contract deployment guide
