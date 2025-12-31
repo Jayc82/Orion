@@ -18,7 +18,26 @@ The scaffold branch (`substrate-evm-scaffold`) includes:
 
 ### Quick Start
 
-**Option A: Use the Frontier Template (Recommended)**
+**Option A: Using Docker (Recommended - Solves Dependency Issues)**
+
+The easiest and most reliable way to build and run Orion:
+
+```bash
+cd substrate-node
+
+# Build and start with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f orion-node
+
+# Access Polkadot.js UI at http://localhost:3000
+# Connect MetaMask to http://localhost:9933 (Chain ID: 1337)
+```
+
+See [`docs/DOCKER.md`](docs/DOCKER.md) for complete Docker documentation.
+
+**Option B: Use the Frontier Template (Manual Build)**
 
 Follow the comprehensive integration guide:
 ```bash
@@ -32,7 +51,7 @@ cargo build --release
 ./target/release/orion-node --dev --tmp
 ```
 
-**Option B: Build from Stub**
+**Option C: Build from Stub**
 
 1. **Clone the repository and checkout the scaffold branch:**
    ```bash
@@ -71,6 +90,7 @@ cargo build --release
 
 ### Documentation
 
+- [`docs/DOCKER.md`](docs/DOCKER.md) - **🐳 Docker setup guide** (SOLVES DEPENDENCY ISSUES)
 - [`docs/FRONTIER_INTEGRATION.md`](docs/FRONTIER_INTEGRATION.md) - **⭐ Complete guide to integrate Frontier template** (RECOMMENDED)
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Technical architecture and design decisions
 - [`docs/RUNNING_LOCALLY.md`](docs/RUNNING_LOCALLY.md) - Step-by-step guide to build and run locally

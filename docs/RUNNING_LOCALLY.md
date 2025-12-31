@@ -2,6 +2,31 @@
 
 This guide walks you through building and running the Orion Substrate node with EVM support on your local machine.
 
+## 🐳 Quick Start with Docker (Recommended)
+
+**The easiest and most reliable way to run Orion is using Docker**, which avoids dependency issues:
+
+```bash
+cd substrate-node
+
+# Build and start
+docker-compose up -d
+
+# View logs
+docker-compose logs -f orion-node
+
+# Access at:
+# - Polkadot.js UI: http://localhost:3000
+# - HTTP RPC: http://localhost:9933
+# - WebSocket RPC: ws://localhost:9944
+```
+
+**See [`DOCKER.md`](DOCKER.md) for complete Docker documentation.**
+
+For manual builds without Docker, continue below.
+
+---
+
 ## Prerequisites
 
 ### Required Software
