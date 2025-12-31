@@ -213,6 +213,9 @@
     </div>
 
     <script>
+        // Configuration
+        const ORION_CHAIN_ID = 1337;
+        
         // Contract ABI for HelloWorld
         const HelloWorldABI = [
             "function getMessage() view returns (string)",
@@ -254,8 +257,8 @@
                     const network = await provider.getNetwork();
                     
                     // Check if we're on Orion
-                    if (network.chainId !== 1337) {
-                        showConnectionStatus('Please switch to Orion network (Chain ID: 1337)', 'warning');
+                    if (network.chainId !== ORION_CHAIN_ID) {
+                        showConnectionStatus(`Please switch to Orion network (Chain ID: ${ORION_CHAIN_ID})`, 'warning');
                         connectButton.disabled = false;
                         connectButton.textContent = 'Connect MetaMask';
                         return;
@@ -413,8 +416,21 @@
                 showContractStatus('Message updated successfully!', 'success');
                 document.getElementById('new-message').value = '';
                 
-                // Auto-refresh message
-                getMessageButton.click();
+                // Refresh message by calling getMessage directly
+                setTimeout(async () => {
+                    try {
+                        const message = await contract.getMessage();
+                        const messageDisplay = document.getElementById('message-display');
+                        messageDisplay.innerHTML = `
+                            <div class="success" style="margin-top: 15px;">
+                                <strong>Current Message:</strong><br>"${message}"
+                            </div>
+                        `;
+                        messageDisplay.classList.remove('hidden');
+                    } catch (error) {
+                        console.error('Error refreshing message:', error);
+                    }
+                }, 1000);
                 
             } catch (error) {
                 showContractStatus(`Error: ${error.message}`, 'error');

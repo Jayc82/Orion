@@ -4,7 +4,10 @@ pragma solidity ^0.8.0;
 /**
  * @title OrionToken
  * @dev Simple ERC20 token implementation for Orion network
- * @notice This is a basic example. For production, use OpenZeppelin contracts.
+ * @notice This is a basic example for DEVELOPMENT/TESTING ONLY. 
+ *         For production, use OpenZeppelin contracts with proper access control.
+ * @warning The mint() function has no access control and is for demonstration only.
+ *          Remove or add owner/role-based access control before production use.
  */
 contract OrionToken {
     // Token metadata
@@ -19,11 +22,23 @@ contract OrionToken {
     // Allowances
     mapping(address => mapping(address => uint256)) private allowances;
     
+    // Owner (for basic access control)
+    address public owner;
+    
     // Events
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Mint(address indexed to, uint256 amount);
     event Burn(address indexed from, uint256 amount);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    
+    /**
+     * @dev Modifier to restrict functions to owner only
+     */
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
     
     /**
      * @dev Constructor that gives msg.sender all of initial supply
@@ -38,6 +53,7 @@ contract OrionToken {
         decimals = 18;
         totalSupply = _initialSupply * 10**decimals;
         balances[msg.sender] = totalSupply;
+        owner = msg.sender;
         
         emit Transfer(address(0), msg.sender, totalSupply);
     }
@@ -129,9 +145,10 @@ contract OrionToken {
     }
     
     /**
-     * @dev Mint new tokens (only for demonstration - remove in production)
+     * @dev Mint new tokens (restricted to owner)
+     * @notice For development/testing. Remove or add more sophisticated access control for production.
      */
-    function mint(address to, uint256 amount) public returns (bool) {
+    function mint(address to, uint256 amount) public onlyOwner returns (bool) {
         require(to != address(0), "Mint to zero address");
         
         totalSupply += amount;
@@ -139,6 +156,19 @@ contract OrionToken {
         
         emit Mint(to, amount);
         emit Transfer(address(0), to, amount);
+        return true;
+    }
+    
+    /**
+     * @dev Transfer ownership to a new address
+     */
+    function transferOwnership(address newOwner) public onlyOwner returns (bool) {
+        require(newOwner != address(0), "New owner is zero address");
+        
+        address oldOwner = owner;
+        owner = newOwner;
+        
+        emit OwnershipTransferred(oldOwner, newOwner);
         return true;
     }
     

@@ -81,15 +81,17 @@ async function addOrionNetwork() {
 
 ### Production Network Configuration
 
-For testnet or mainnet:
+For testnet or mainnet (replace with actual endpoints when available):
 
 ```
 Network Name: Orion Testnet
-New RPC URL: https://rpc.testnet.orion.network
+New RPC URL: https://rpc.testnet.orion.network  (EXAMPLE - replace with actual)
 Chain ID: 1337
 Currency Symbol: ORN
-Block Explorer URL: https://explorer.testnet.orion.network
+Block Explorer URL: https://explorer.testnet.orion.network  (EXAMPLE - replace with actual)
 ```
+
+> **Note**: The URLs above are placeholders. Replace with actual testnet/mainnet endpoints when deployed.
 
 ## Polkadot.js Extension
 
