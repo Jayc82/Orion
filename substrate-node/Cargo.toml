@@ -1,0 +1,37 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "node",
+    "runtime",
+]
+
+[workspace.package]
+authors = ["Orion Contributors"]
+edition = "2021"
+repository = "https://github.com/Jayc82/Orion"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+# Substrate primitives
+# TODO: Add full Substrate dependencies when integrating the complete node template
+# sp-core = { version = "21.0.0", default-features = false }
+# sp-runtime = { version = "24.0.0", default-features = false }
+# sp-io = { version = "23.0.0", default-features = false }
+
+# Substrate frame
+# frame-support = { version = "21.0.0", default-features = false }
+# frame-system = { version = "21.0.0", default-features = false }
+
+# Frontier/EVM pallets
+# pallet-evm = { version = "6.0.0-dev", default-features = false }
+# pallet-ethereum = { version = "4.0.0-dev", default-features = false }
+# fp-evm = { version = "3.0.0-dev", default-features = false }
+
+# Node dependencies
+# sc-cli = "0.10.0-dev"
+# sc-executor = "0.10.0-dev"
+# sc-service = "0.10.0-dev"
+
+[profile.release]
+panic = "unwind"

@@ -1,0 +1,52 @@
+[package]
+name = "orion-runtime"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Orion Runtime with EVM support"
+
+[dependencies]
+# This is a minimal stub. When integrating the full runtime,
+# uncomment and add the following dependencies:
+#
+# codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+# scale-info = { version = "2.0.0", default-features = false }
+#
+# # Substrate primitives
+# sp-api = { workspace = true }
+# sp-block-builder = { workspace = true }
+# sp-core = { workspace = true }
+# sp-inherents = { workspace = true }
+# sp-offchain = { workspace = true }
+# sp-runtime = { workspace = true }
+# sp-session = { workspace = true }
+# sp-std = { workspace = true }
+# sp-transaction-pool = { workspace = true }
+# sp-version = { workspace = true }
+#
+# # Substrate FRAME
+# frame-executive = { workspace = true }
+# frame-support = { workspace = true }
+# frame-system = { workspace = true }
+# pallet-aura = { workspace = true }
+# pallet-balances = { workspace = true }
+# pallet-grandpa = { workspace = true }
+# pallet-sudo = { workspace = true }
+# pallet-timestamp = { workspace = true }
+# pallet-transaction-payment = { workspace = true }
+#
+# # Frontier/EVM pallets
+# pallet-evm = { workspace = true }
+# pallet-ethereum = { workspace = true }
+# pallet-base-fee = { workspace = true }
+# fp-evm = { workspace = true }
+# fp-self-contained = { workspace = true }
+
+[features]
+default = ["std"]
+std = []
+
+[build-dependencies]
+# substrate-wasm-builder = { workspace = true }
