@@ -16,6 +16,10 @@ env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
 
+# Restrict permissions to minimum required
+permissions:
+  contents: read
+
 jobs:
   check:
     name: Check Substrate Node
