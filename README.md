@@ -2,6 +2,22 @@
 
 Orion Coin: A Layer-1 blockchain combining Bitcoin-style security with Ethereum-style smart contracts.
 
+## 🔒 Security
+
+**Development vs Production Warning**: The current implementation includes development configurations with known private keys. **NEVER use these in production.**
+
+- 📋 **Security Policy**: See [`docs/SECURITY.md`](docs/SECURITY.md) for comprehensive security guidelines
+- 🔍 **Security Audit**: Run `./scripts/security-audit.sh` before deployment
+- 🐛 **Report Vulnerabilities**: security@orion-network.example (use responsible disclosure)
+- ✅ **Production Checklist**: Review security requirements before mainnet launch
+
+**Quick Security Checks:**
+- ✅ All contracts audited by professionals
+- ✅ TLS/SSL configured for RPC endpoints
+- ✅ Firewall rules implemented
+- ✅ Keys stored in hardware wallets
+- ✅ Monitoring and alerting active
+
 ## Substrate + EVM Scaffold
 
 We've added an initial scaffold for building Orion on Substrate with Frontier/EVM integration. This provides a foundation for developers to build and test a local development chain with full Ethereum compatibility.
