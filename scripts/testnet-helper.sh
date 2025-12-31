@@ -76,7 +76,7 @@ start_testnet() {
     
     cd "${TESTNET_DIR}"
     
-    if docker-compose -f docker-compose.testnet.yml ps | grep -q "Up"; then
+    if docker-compose -f docker-compose.testnet.yml ps | grep -q "^.*Up"; then
         print_warning "Testnet is already running"
         print_info "Use '$0 restart' to restart or '$0 stop' to stop first"
         return 0
@@ -188,7 +188,7 @@ check_health() {
         local name="${validator%%:*}"
         local port="${validator##*:}"
         
-        if curl -s -f "http://localhost:${port}/health" > /dev/null 2>&1; then
+        if curl --max-time 5 -s -f "http://localhost:${port}/health" > /dev/null 2>&1; then
             print_success "$name is healthy"
         else
             print_error "$name is not responding"

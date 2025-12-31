@@ -16,6 +16,9 @@ services:
       - "9615:9615"   # Prometheus
     volumes:
       - alice-data:/data
+    # SECURITY NOTE: These node keys are for DEVELOPMENT ONLY
+    # In production, generate unique keys and use environment variables
+    # Example: --node-key=${NODE_KEY_ALICE}
     command: >
       orion-node
       --base-path=/data
