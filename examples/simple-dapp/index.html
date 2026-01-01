@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orion Simple dApp</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #856404;
+        }
+        
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #1976d2;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #c62828;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #2e7d32;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .action-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 Orion dApp</h1>
+        <p class="subtitle">Simple example dApp for interacting with the Orion network</p>
+        
+        <!-- Connection Section -->
+        <div class="card">
+            <h2>👛 Wallet Connection</h2>
+            <div id="connection-status" class="hidden"></div>
+            <button id="add-network-button">➕ Add Orion Network to MetaMask</button>
+            <button id="connect-button" style="margin-top: 10px;">Connect MetaMask</button>
+        </div>
+        
+        <!-- Account Info Section -->
+        <div id="account-section" class="card hidden">
+            <h2>📊 Account Information</h2>
+            <div class="info">
+                <div class="info-label">Address</div>
+                <div class="info-value" id="account-address"></div>
+            </div>
+            <div class="info">
+                <div class="info-label">Balance</div>
+                <div class="info-value" id="account-balance"></div>
+            </div>
+            <div class="info">
+                <div class="info-label">Network</div>
+                <div class="info-value" id="network-info"></div>
+            </div>
+            <button id="refresh-button">🔄 Refresh Balance</button>
+        </div>
+        
+        <!-- Transfer Section -->
+        <div id="transfer-section" class="card hidden">
+            <h2>💸 Send Transaction</h2>
+            <input type="text" id="recipient-address" placeholder="Recipient Address (0x...)" />
+            <input type="text" id="amount" placeholder="Amount in ORN" />
+            <button id="send-button">Send ORN</button>
+            <div id="tx-status" class="hidden"></div>
+        </div>
+        
+        <!-- Contract Interaction Section -->
+        <div id="contract-section" class="card hidden">
+            <h2>📝 Contract Interaction</h2>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">
+                Deploy the HelloWorld contract first (see contracts/README.md)
+            </p>
+            <input type="text" id="contract-address" placeholder="Contract Address (0x...)" />
+            <div class="action-group">
+                <button id="load-contract-button">Load Contract</button>
+                <button id="get-message-button" disabled>Get Message</button>
+            </div>
+            <div id="message-display" class="hidden"></div>
+            <div style="margin-top: 15px;">
+                <input type="text" id="new-message" placeholder="New Message" />
+                <button id="set-message-button" disabled>Set Message</button>
+            </div>
+            <div id="contract-status" class="hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const ORION_CHAIN_ID = 1251;
+        
+        // Contract ABI for HelloWorld
+        const HelloWorldABI = [
+            "function getMessage() view returns (string)",
+            "function setMessage(string) returns (bool)"
+        ];
+        
+        let provider;
+        let signer;
+        let contract;
+        let userAccount;
+        
+        // DOM elements
+        const addNetworkButton = document.getElementById('add-network-button');
+        const connectButton = document.getElementById('connect-button');
+        const refreshButton = document.getElementById('refresh-button');
+        const sendButton = document.getElementById('send-button');
+        const loadContractButton = document.getElementById('load-contract-button');
+        const getMessageButton = document.getElementById('get-message-button');
+        const setMessageButton = document.getElementById('set-message-button');
+        
+        // Add Orion network to MetaMask
+        addNetworkButton.addEventListener('click', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    addNetworkButton.disabled = true;
+                    addNetworkButton.textContent = 'Adding Network...';
+                    
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: '0x4E3', // 1251 in hex
+                            chainName: 'Orion Development',
+                            rpcUrls: ['http://127.0.0.1:9933'],
+                            nativeCurrency: {
+                                name: 'ORN',
+                                symbol: 'ORN',
+                                decimals: 18
+                            },
+                            blockExplorerUrls: ['http://localhost:3000']
+                        }]
+                    });
+                    
+                    showConnectionStatus('Orion network added to MetaMask successfully!', 'success');
+                    addNetworkButton.textContent = '✓ Network Added';
+                    
+                    // Enable connect button
+                    connectButton.disabled = false;
+                    
+                } catch (error) {
+                    if (error.code === 4001) {
+                        showConnectionStatus('Network addition rejected by user', 'error');
+                    } else if (error.code === -32002) {
+                        showConnectionStatus('Network addition request already pending. Please check MetaMask.', 'warning');
+                    } else {
+                        showConnectionStatus(`Error adding network: ${error.message}`, 'error');
+                    }
+                    addNetworkButton.disabled = false;
+                    addNetworkButton.textContent = '➕ Add Orion Network to MetaMask';
+                }
+            } else {
+                showConnectionStatus('MetaMask not installed! Please install MetaMask browser extension.', 'error');
+            }
+        });
+        
+        // Connect wallet
+        connectButton.addEventListener('click', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    connectButton.disabled = true;
+                    connectButton.textContent = 'Connecting...';
+                    
+                    // Request account access
+                    const accounts = await window.ethereum.request({ 
+                        method: 'eth_requestAccounts' 
+                    });
+                    
+                    userAccount = accounts[0];
+                    
+                    // Create provider and signer
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    
+                    // Get network info
+                    const network = await provider.getNetwork();
+                    
+                    // Check if we're on Orion
+                    if (network.chainId !== ORION_CHAIN_ID) {
+                        showConnectionStatus(`Please switch to Orion network (Chain ID: ${ORION_CHAIN_ID})`, 'warning');
+                        connectButton.disabled = false;
+                        connectButton.textContent = 'Connect MetaMask';
+                        return;
+                    }
+                    
+                    // Update UI
+                    await updateAccountInfo();
+                    showConnectionStatus('Connected successfully!', 'success');
+                    
+                    // Show sections
+                    document.getElementById('account-section').classList.remove('hidden');
+                    document.getElementById('transfer-section').classList.remove('hidden');
+                    document.getElementById('contract-section').classList.remove('hidden');
+                    
+                    connectButton.textContent = 'Connected ✓';
+                    
+                } catch (error) {
+                    showConnectionStatus(`Error: ${error.message}`, 'error');
+                    connectButton.disabled = false;
+                    connectButton.textContent = 'Connect MetaMask';
+                }
+            } else {
+                showConnectionStatus('MetaMask not installed! Please install MetaMask browser extension.', 'error');
+            }
+        });
+        
+        // Update account information
+        async function updateAccountInfo() {
+            try {
+                // Update address
+                document.getElementById('account-address').textContent = userAccount;
+                
+                // Update balance
+                const balance = await provider.getBalance(userAccount);
+                const balanceInOrn = ethers.utils.formatEther(balance);
+                document.getElementById('account-balance').textContent = `${parseFloat(balanceInOrn).toFixed(4)} ORN`;
+                
+                // Update network info
+                const network = await provider.getNetwork();
+                document.getElementById('network-info').textContent = 
+                    `${network.name || 'Orion'} (Chain ID: ${network.chainId})`;
+            } catch (error) {
+                console.error('Error updating account info:', error);
+            }
+        }
+        
+        // Refresh balance
+        refreshButton.addEventListener('click', updateAccountInfo);
+        
+        // Send transaction
+        sendButton.addEventListener('click', async () => {
+            const recipient = document.getElementById('recipient-address').value;
+            const amount = document.getElementById('amount').value;
+            
+            if (!recipient || !amount) {
+                showTxStatus('Please enter recipient address and amount', 'error');
+                return;
+            }
+            
+            try {
+                sendButton.disabled = true;
+                sendButton.textContent = 'Sending...';
+                showTxStatus('Preparing transaction...', 'info');
+                
+                const tx = await signer.sendTransaction({
+                    to: recipient,
+                    value: ethers.utils.parseEther(amount)
+                });
+                
+                showTxStatus(`Transaction sent! Hash: ${tx.hash}`, 'info');
+                
+                await tx.wait();
+                
+                showTxStatus('Transaction confirmed!', 'success');
+                await updateAccountInfo();
+                
+                // Clear inputs
+                document.getElementById('recipient-address').value = '';
+                document.getElementById('amount').value = '';
+                
+            } catch (error) {
+                showTxStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                sendButton.disabled = false;
+                sendButton.textContent = 'Send ORN';
+            }
+        });
+        
+        // Load contract
+        loadContractButton.addEventListener('click', async () => {
+            const contractAddress = document.getElementById('contract-address').value;
+            
+            if (!contractAddress) {
+                showContractStatus('Please enter contract address', 'error');
+                return;
+            }
+            
+            try {
+                contract = new ethers.Contract(contractAddress, HelloWorldABI, signer);
+                getMessageButton.disabled = false;
+                setMessageButton.disabled = false;
+                showContractStatus('Contract loaded successfully!', 'success');
+            } catch (error) {
+                showContractStatus(`Error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Get message from contract
+        getMessageButton.addEventListener('click', async () => {
+            if (!contract) return;
+            
+            try {
+                getMessageButton.disabled = true;
+                getMessageButton.textContent = 'Loading...';
+                
+                const message = await contract.getMessage();
+                
+                const messageDisplay = document.getElementById('message-display');
+                messageDisplay.innerHTML = `
+                    <div class="success" style="margin-top: 15px;">
+                        <strong>Current Message:</strong><br>"${message}"
+                    </div>
+                `;
+                messageDisplay.classList.remove('hidden');
+                
+            } catch (error) {
+                showContractStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                getMessageButton.disabled = false;
+                getMessageButton.textContent = 'Get Message';
+            }
+        });
+        
+        // Set message in contract
+        setMessageButton.addEventListener('click', async () => {
+            if (!contract) return;
+            
+            const newMessage = document.getElementById('new-message').value;
+            
+            if (!newMessage) {
+                showContractStatus('Please enter a message', 'error');
+                return;
+            }
+            
+            try {
+                setMessageButton.disabled = true;
+                setMessageButton.textContent = 'Sending...';
+                showContractStatus('Sending transaction...', 'info');
+                
+                const tx = await contract.setMessage(newMessage);
+                showContractStatus(`Transaction sent! Hash: ${tx.hash}`, 'info');
+                
+                await tx.wait();
+                
+                showContractStatus('Message updated successfully!', 'success');
+                document.getElementById('new-message').value = '';
+                
+                // Refresh message by calling getMessage directly
+                setTimeout(async () => {
+                    try {
+                        const message = await contract.getMessage();
+                        const messageDisplay = document.getElementById('message-display');
+                        messageDisplay.innerHTML = `
+                            <div class="success" style="margin-top: 15px;">
+                                <strong>Current Message:</strong><br>"${message}"
+                            </div>
+                        `;
+                        messageDisplay.classList.remove('hidden');
+                    } catch (error) {
+                        console.error('Error refreshing message:', error);
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                showContractStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                setMessageButton.disabled = false;
+                setMessageButton.textContent = 'Set Message';
+            }
+        });
+        
+        // Status display helpers
+        function showConnectionStatus(message, type) {
+            const statusEl = document.getElementById('connection-status');
+            statusEl.className = type;
+            statusEl.textContent = message;
+            statusEl.classList.remove('hidden');
+        }
+        
+        function showTxStatus(message, type) {
+            const statusEl = document.getElementById('tx-status');
+            statusEl.className = type;
+            statusEl.textContent = message;
+            statusEl.classList.remove('hidden');
+        }
+        
+        function showContractStatus(message, type) {
+            const statusEl = document.getElementById('contract-status');
+            statusEl.className = type;
+            statusEl.textContent = message;
+            statusEl.classList.remove('hidden');
+        }
+        
+        // Listen for account changes
+        if (typeof window.ethereum !== 'undefined') {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    location.reload();
+                } else {
+                    userAccount = accounts[0];
+                    updateAccountInfo();
+                }
+            });
+            
+            window.ethereum.on('chainChanged', () => {
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

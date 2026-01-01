@@ -1,0 +1,42 @@
+[package]
+name = "orion-node"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Orion Substrate Node with EVM support (Frontier)"
+
+[dependencies]
+# This is a minimal stub. When integrating the full Substrate node template,
+# uncomment and add the following dependencies:
+#
+# sc-cli = { workspace = true }
+# sc-executor = { workspace = true }
+# sc-service = { workspace = true }
+# sc-consensus-aura = { workspace = true }
+# sc-consensus-grandpa = { workspace = true }
+# sc-network = { workspace = true }
+# sc-rpc = { workspace = true }
+# sc-transaction-pool = { workspace = true }
+# sp-consensus-aura = { workspace = true }
+# sp-consensus-grandpa = { workspace = true }
+# sp-core = { workspace = true }
+# sp-runtime = { workspace = true }
+# substrate-frame-rpc-system = { workspace = true }
+# pallet-transaction-payment-rpc = { workspace = true }
+# 
+# # Frontier/EVM RPC
+# fc-rpc = { workspace = true }
+# fc-rpc-core = { workspace = true }
+# fp-rpc = { workspace = true }
+
+# For now, we only need tokio to make this buildable
+tokio = { version = "1.35", features = ["macros", "rt-multi-thread"] }
+
+[build-dependencies]
+# substrate-build-script-utils = { workspace = true }
+
+[[bin]]
+name = "orion-node"
+path = "src/main.rs"
