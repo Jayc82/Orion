@@ -35,7 +35,25 @@ Orion supports both Ethereum-style wallets (MetaMask) and Substrate-native walle
 
 ### Adding Orion Network
 
-#### Method 1: Manual Configuration
+#### Method 1: Using the Example dApp (Easiest)
+
+1. Start the Orion node:
+   ```bash
+   cd substrate-node
+   docker-compose up -d
+   ```
+
+2. Open `examples/simple-dapp/index.html` in your browser
+
+3. Click "➕ Add Orion Network to MetaMask"
+
+4. Approve the network addition in MetaMask
+
+5. MetaMask will automatically switch to the Orion network
+
+This method bypasses MetaMask's validation warnings and adds the network directly.
+
+#### Method 2: Manual Configuration
 
 1. Open MetaMask
 2. Click network dropdown (top center)
@@ -44,15 +62,15 @@ Orion supports both Ethereum-style wallets (MetaMask) and Substrate-native walle
 
 ```
 Network Name: Orion Development
-New RPC URL: http://localhost:9933
+New RPC URL: http://127.0.0.1:9933
 Chain ID: 1251
 Currency Symbol: ORN
-Block Explorer URL: (leave empty for local)
+Block Explorer URL: http://localhost:3000
 ```
 
-5. Click "Save"
+5. If you see "According to our records, this URL does not match a known provider for this chain ID", this is expected for local development networks. The programmatic method (Method 1) bypasses this limitation.
 
-#### Method 2: Programmatic (dApp)
+#### Method 3: Programmatic (dApp Integration)
 
 Add this code to your dApp:
 
@@ -69,12 +87,19 @@ async function addOrionNetwork() {
           symbol: 'ORN',
           decimals: 18
         },
-        rpcUrls: ['http://localhost:9933'],
-        blockExplorerUrls: null
+        rpcUrls: ['http://127.0.0.1:9933'],
+        blockExplorerUrls: ['http://localhost:3000']
       }]
     });
+    console.log('Orion network added successfully');
   } catch (error) {
-    console.error('Failed to add network:', error);
+    if (error.code === 4001) {
+      console.log('User rejected network addition');
+    } else if (error.code === -32002) {
+      console.log('Network addition request already pending');
+    } else {
+      console.error('Failed to add network:', error);
+    }
   }
 }
 ```

@@ -85,6 +85,15 @@
             transform: none;
         }
         
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #856404;
+        }
+        
         .info {
             background: #e3f2fd;
             border-left: 4px solid #2196f3;
@@ -162,7 +171,8 @@
         <div class="card">
             <h2>👛 Wallet Connection</h2>
             <div id="connection-status" class="hidden"></div>
-            <button id="connect-button">Connect MetaMask</button>
+            <button id="add-network-button">➕ Add Orion Network to MetaMask</button>
+            <button id="connect-button" style="margin-top: 10px;">Connect MetaMask</button>
         </div>
         
         <!-- Account Info Section -->
@@ -228,12 +238,57 @@
         let userAccount;
         
         // DOM elements
+        const addNetworkButton = document.getElementById('add-network-button');
         const connectButton = document.getElementById('connect-button');
         const refreshButton = document.getElementById('refresh-button');
         const sendButton = document.getElementById('send-button');
         const loadContractButton = document.getElementById('load-contract-button');
         const getMessageButton = document.getElementById('get-message-button');
         const setMessageButton = document.getElementById('set-message-button');
+        
+        // Add Orion network to MetaMask
+        addNetworkButton.addEventListener('click', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    addNetworkButton.disabled = true;
+                    addNetworkButton.textContent = 'Adding Network...';
+                    
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: '0x4E3', // 1251 in hex
+                            chainName: 'Orion Development',
+                            rpcUrls: ['http://127.0.0.1:9933'],
+                            nativeCurrency: {
+                                name: 'ORN',
+                                symbol: 'ORN',
+                                decimals: 18
+                            },
+                            blockExplorerUrls: ['http://localhost:3000']
+                        }]
+                    });
+                    
+                    showConnectionStatus('Orion network added to MetaMask successfully!', 'success');
+                    addNetworkButton.textContent = '✓ Network Added';
+                    
+                    // Enable connect button
+                    connectButton.disabled = false;
+                    
+                } catch (error) {
+                    if (error.code === 4001) {
+                        showConnectionStatus('Network addition rejected by user', 'error');
+                    } else if (error.code === -32002) {
+                        showConnectionStatus('Network addition request already pending. Please check MetaMask.', 'warning');
+                    } else {
+                        showConnectionStatus(`Error adding network: ${error.message}`, 'error');
+                    }
+                    addNetworkButton.disabled = false;
+                    addNetworkButton.textContent = '➕ Add Orion Network to MetaMask';
+                }
+            } else {
+                showConnectionStatus('MetaMask not installed! Please install MetaMask browser extension.', 'error');
+            }
+        });
         
         // Connect wallet
         connectButton.addEventListener('click', async () => {
