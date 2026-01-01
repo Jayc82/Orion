@@ -1,0 +1,185 @@
+version: '3.8'
+
+services:
+  # Bootnode - First validator (Alice)
+  validator-alice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_TYPE: release
+    container_name: orion-validator-alice
+    ports:
+      - "9933:9933"   # HTTP RPC
+      - "9944:9944"   # WebSocket RPC
+      - "30333:30333" # P2P
+      - "9615:9615"   # Prometheus
+    volumes:
+      - alice-data:/data
+    # SECURITY NOTE: These node keys are for DEVELOPMENT ONLY
+    # In production, generate unique keys and use environment variables
+    # Example: --node-key=${NODE_KEY_ALICE}
+    command: >
+      orion-node
+      --base-path=/data
+      --chain=local
+      --alice
+      --node-key=0000000000000000000000000000000000000000000000000000000000000001
+      --validator
+      --unsafe-rpc-external
+      --unsafe-ws-external
+      --rpc-cors=all
+      --rpc-methods=Unsafe
+      --prometheus-external
+    networks:
+      - orion-testnet
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9933/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Second validator (Bob)
+  validator-bob:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_TYPE: release
+    container_name: orion-validator-bob
+    ports:
+      - "9934:9933"   # HTTP RPC
+      - "9945:9944"   # WebSocket RPC
+      - "30334:30333" # P2P
+      - "9616:9615"   # Prometheus
+    volumes:
+      - bob-data:/data
+    command: >
+      orion-node
+      --base-path=/data
+      --chain=local
+      --bob
+      --node-key=0000000000000000000000000000000000000000000000000000000000000002
+      --validator
+      --bootnodes=/dns/validator-alice/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+      --unsafe-rpc-external
+      --unsafe-ws-external
+      --rpc-cors=all
+      --rpc-methods=Unsafe
+      --prometheus-external
+    networks:
+      - orion-testnet
+    depends_on:
+      - validator-alice
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9933/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Third validator (Charlie)
+  validator-charlie:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_TYPE: release
+    container_name: orion-validator-charlie
+    ports:
+      - "9935:9933"   # HTTP RPC
+      - "9946:9944"   # WebSocket RPC
+      - "30335:30333" # P2P
+      - "9617:9615"   # Prometheus
+    volumes:
+      - charlie-data:/data
+    command: >
+      orion-node
+      --base-path=/data
+      --chain=local
+      --charlie
+      --node-key=0000000000000000000000000000000000000000000000000000000000000003
+      --validator
+      --bootnodes=/dns/validator-alice/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+      --unsafe-rpc-external
+      --unsafe-ws-external
+      --rpc-cors=all
+      --rpc-methods=Unsafe
+      --prometheus-external
+    networks:
+      - orion-testnet
+    depends_on:
+      - validator-alice
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9933/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Optional: Polkadot.js Apps UI
+  polkadot-ui:
+    image: jacogr/polkadot-js-apps:latest
+    container_name: orion-polkadot-ui
+    ports:
+      - "3000:80"
+    environment:
+      - WS_URL=ws://validator-alice:9944
+    networks:
+      - orion-testnet
+    depends_on:
+      - validator-alice
+    restart: unless-stopped
+
+  # Optional: Prometheus for monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: orion-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - orion-testnet
+    depends_on:
+      - validator-alice
+      - validator-bob
+      - validator-charlie
+    restart: unless-stopped
+
+  # Optional: Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: orion-grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - orion-testnet
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+networks:
+  orion-testnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  alice-data:
+  bob-data:
+  charlie-data:
+  prometheus-data:
+  grafana-data:

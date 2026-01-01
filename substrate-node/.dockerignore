@@ -1,0 +1,47 @@
+# Build artifacts
+target/
+**/target/
+
+# Cargo lock files (we want to include the main one for reproducible builds)
+# **/Cargo.lock
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Documentation (not needed in image)
+docs/
+*.md
+README*
+LICENSE
+
+# CI/CD
+.github/
+
+# Backup files
+*.backup/
+substrate-node.backup/
+
+# Docker files themselves
+Dockerfile*
+docker-compose*.yml
+.dockerignore

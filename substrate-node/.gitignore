@@ -1,0 +1,30 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo lock file (for libraries)
+# Uncomment for binaries:
+# Cargo.lock
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Chain database
+/chain-data/
+/db/
+
+# Generated specs
+/specs/*.json
+
+# Node binary
+/node/target/
+/runtime/target/

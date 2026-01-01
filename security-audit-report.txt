@@ -1,0 +1,8 @@
+Orion Security Audit Report
+Generated: Thu Jan  1 01:53:38 UTC 2026
+========================================
+
+
+[0;34m=== Solidity Compiler Check ===[0m
+
+[1;33m[MEDIUM][0m Solidity compiler (solc) not found. Install with: npm install -g solc

@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  orion-node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROFILE: release
+    container_name: orion-node
+    ports:
+      - "9933:9933"   # HTTP RPC
+      - "9944:9944"   # WebSocket RPC
+      - "30333:30333" # P2P
+      - "9615:9615"   # Prometheus metrics
+    volumes:
+      - orion-data:/data
+    environment:
+      - RUST_BACKTRACE=1
+      - RUST_LOG=info
+    command: >
+      orion-node
+      --dev
+      --rpc-external
+      --rpc-cors=all
+      --rpc-methods=Unsafe
+      --base-path=/data
+      --name=orion-dev-node
+    restart: unless-stopped
+    networks:
+      - orion-network
+
+  # Optional: Polkadot.js Apps UI
+  polkadot-ui:
+    image: jacogr/polkadot-js-apps:latest
+    container_name: orion-polkadot-ui
+    ports:
+      - "3000:80"
+    environment:
+      - WS_URL=ws://orion-node:9944
+    depends_on:
+      - orion-node
+    networks:
+      - orion-network
+    restart: unless-stopped
+
+volumes:
+  orion-data:
+    driver: local
+
+networks:
+  orion-network:
+    driver: bridge

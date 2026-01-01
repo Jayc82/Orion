@@ -1,0 +1,174 @@
+name: Orion Substrate CI
+
+# Run on pushes and PRs to the substrate-evm-scaffold branch
+# This workflow performs conservative checks without lengthy tests
+on:
+  push:
+    branches:
+      - substrate-evm-scaffold
+      - copilot/add-substrate-evm-scaffold
+  pull_request:
+    branches:
+      - main
+      - substrate-evm-scaffold
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+# Restrict permissions to minimum required
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check Substrate Node
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # Cache cargo dependencies to speed up builds
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@v3
+        with:
+          path: substrate-node/target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+      # Run cargo check to verify the code compiles
+      - name: Check substrate-node
+        working-directory: ./substrate-node
+        run: cargo check --verbose
+
+      # Run cargo fmt to check code formatting
+      - name: Check formatting
+        working-directory: ./substrate-node
+        run: cargo fmt -- --check
+
+      # Run clippy for lint checks
+      - name: Run clippy
+        working-directory: ./substrate-node
+        run: cargo clippy -- -D warnings
+
+  test:
+    name: Test Substrate Node
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@v3
+        with:
+          path: substrate-node/target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+      # Run tests (minimal for stub, will expand when full node is integrated)
+      - name: Run tests
+        working-directory: ./substrate-node
+        run: cargo test --verbose
+
+  scripts:
+    name: Validate Scripts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check scripts are executable
+        run: |
+          test -x scripts/bootstrap.sh
+          test -x scripts/generate-specs.sh
+
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint bash scripts
+        run: |
+          shellcheck scripts/bootstrap.sh
+          shellcheck scripts/generate-specs.sh
+
+  solidity:
+    name: Validate Solidity Contracts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install solc (Solidity compiler)
+        run: |
+          npm install -g solc
+
+      - name: Compile HelloWorld.sol
+        run: |
+          solcjs --bin --abi contracts/HelloWorld.sol
+
+      - name: Check compilation output
+        run: |
+          test -f contracts_HelloWorld_sol_HelloWorld.bin
+          test -f contracts_HelloWorld_sol_HelloWorld.abi
+
+# Notes on CI design:
+# 
+# We use stable Rust toolchain because:
+# - More stable and predictable for CI
+# - Substrate supports stable Rust
+# - Nightly is only needed for specific features (can add later)
+#
+# This workflow is conservative and fast:
+# - cargo check: Verifies compilation without building
+# - cargo test: Runs minimal tests (quick for stub)
+# - Script validation: Ensures scripts are executable and valid
+# - Solidity check: Verifies example contract compiles
+#
+# We intentionally skip:
+# - Full cargo build --release (takes 15-30 min)
+# - Integration tests (none yet for stub)
+# - Runtime benchmarks (for later)
+#
+# When full Substrate node is integrated, expand to:
+# - Build benchmarks
+# - Runtime tests
+# - Try-runtime checks
+# - WASM build verification
