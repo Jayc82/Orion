@@ -1049,7 +1049,7 @@ function mint(address to, uint amount) public onlyOwner {
 - Session length: 600 blocks (~1 hour)
 
 **EVM Configuration:**
-- Chain ID: 1337 (development), TBD (mainnet)
+- Chain ID: 1251 (development), TBD (mainnet)
 - EVM version: Latest (London+ with EIP-1559)
 - Max code size: 24,576 bytes
 - Call stack limit: 1024

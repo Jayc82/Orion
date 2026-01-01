@@ -45,7 +45,7 @@ Orion supports both Ethereum-style wallets (MetaMask) and Substrate-native walle
 ```
 Network Name: Orion Development
 New RPC URL: http://localhost:9933
-Chain ID: 1337
+Chain ID: 1251
 Currency Symbol: ORN
 Block Explorer URL: (leave empty for local)
 ```
@@ -62,7 +62,7 @@ async function addOrionNetwork() {
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [{
-        chainId: '0x539', // 1337 in hex
+        chainId: '0x4E3', // 1251 in hex
         chainName: 'Orion Development',
         nativeCurrency: {
           name: 'Orion',
@@ -86,7 +86,7 @@ For testnet or mainnet (replace with actual endpoints when available):
 ```
 Network Name: Orion Testnet
 New RPC URL: https://rpc.testnet.orion.network  (EXAMPLE - replace with actual)
-Chain ID: 1337
+Chain ID: 1251
 Currency Symbol: ORN
 Block Explorer URL: https://explorer.testnet.orion.network  (EXAMPLE - replace with actual)
 ```

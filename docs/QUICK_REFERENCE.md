@@ -20,7 +20,7 @@ docker-compose up -d
 
 # 4. Test with example dApp
 open ../examples/simple-dapp/index.html
-# Connect MetaMask with Chain ID: 1337, RPC: http://localhost:9933
+# Connect MetaMask with Chain ID: 1251, RPC: http://localhost:9933
 ```
 
 ## Essential Commands
@@ -149,7 +149,7 @@ Charlie: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y
 2. Create new file, paste contract code
 3. Compile with Solidity 0.8.0+
 4. Deploy & Run → Environment: "Injected Provider - MetaMask"
-5. Configure MetaMask for Orion (Chain ID 1337, RPC http://localhost:9933)
+5. Configure MetaMask for Orion (Chain ID 1251, RPC http://localhost:9933)
 6. Import a development account
 7. Deploy contract
 
@@ -162,7 +162,7 @@ module.exports = {
   networks: {
     orion: {
       url: "http://127.0.0.1:9933",
-      chainId: 1337,
+      chainId: 1251,
       accounts: [
         "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133" // Alith
       ]
@@ -281,7 +281,7 @@ docker logs orion-node
 
 ### Can't Connect MetaMask
 1. Verify node is running: `curl http://localhost:9933`
-2. Check MetaMask network config (Chain ID 1337, correct RPC)
+2. Check MetaMask network config (Chain ID 1251, correct RPC)
 3. Try resetting MetaMask (Settings → Advanced → Reset Account)
 4. Check browser console for errors
 

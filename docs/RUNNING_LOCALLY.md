@@ -200,7 +200,7 @@ Configure your Ethereum tools to connect to:
 3. Fill in:
    - Network Name: Orion Local
    - RPC URL: http://127.0.0.1:9933
-   - Chain ID: 1337
+   - Chain ID: 1251
    - Currency Symbol: ORN
 4. Save
 
@@ -223,7 +223,7 @@ See `contracts/README.md` for detailed instructions.
      networks: {
        orion: {
          url: "http://127.0.0.1:9933",
-         chainId: 1337,
+         chainId: 1251,
        }
      }
    };
@@ -373,7 +373,7 @@ lsof -i :9933
 networks: {
   orion: {
     url: "http://127.0.0.1:9933",
-    chainId: 1337,
+    chainId: 1251,
     gas: 5000000,
   }
 }

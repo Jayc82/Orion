@@ -74,8 +74,8 @@ pub fn development_config(enable_manual_seal: bool) -> ChainSpec {
 			],
 			// Initial PoA authorities
 			vec![authority_keys_from_seed("Alice")],
-			// Ethereum chain ID (1337 for development)
-			1337,
+			// Ethereum chain ID (1251 for development)
+			1251,
 			enable_manual_seal,
 		))
 		.build()
@@ -103,7 +103,7 @@ pub fn local_testnet_config() -> ChainSpec {
 				authority_keys_from_seed("Alice"),
 				authority_keys_from_seed("Bob"),
 			],
-			1337,  // Ethereum chain ID
+			1251,  // Ethereum chain ID
 			false,
 		))
 		.build()

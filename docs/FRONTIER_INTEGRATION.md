@@ -1,6 +1,6 @@
 # Frontier Template Integration Guide
 
-This guide provides detailed step-by-step instructions for integrating the official Frontier template into the Orion project and customizing it for the ORN token and chain ID 1337.
+This guide provides detailed step-by-step instructions for integrating the official Frontier template into the Orion project and customizing it for the ORN token and chain ID 1251.
 
 ## Why Use the Frontier Template?
 
@@ -382,7 +382,7 @@ module.exports = {
   networks: {
     orion: {
       url: "http://127.0.0.1:9933",
-      chainId: 1337,
+      chainId: 1251,
       accounts: ["0x<alice_private_key>"]  // Use Alice's dev key
     }
   }
@@ -514,7 +514,7 @@ Solution: Specify gas manually in Hardhat
 networks: {
   orion: {
     url: "http://127.0.0.1:9933",
-    chainId: 1337,
+    chainId: 1251,
     gas: 5000000,
     gasPrice: 1000000000
   }
@@ -589,7 +589,7 @@ You've successfully integrated the Frontier template into Orion! Your node now h
 - ✅ Complete EVM support via Frontier pallets
 - ✅ Ethereum JSON-RPC compatibility
 - ✅ ORN token with 18 decimals
-- ✅ Chain ID 1337 for development
+- ✅ Chain ID 1251 for development
 - ✅ Production-ready code base
 
 Next steps:

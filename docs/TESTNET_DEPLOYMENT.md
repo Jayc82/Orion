@@ -204,7 +204,7 @@ module.exports = {
   networks: {
     orion_testnet: {
       url: "http://localhost:9933",
-      chainId: 1337,
+      chainId: 1251,
       accounts: [
         // Alith's private key (pre-funded development account)
         "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133"

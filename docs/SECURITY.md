@@ -59,7 +59,7 @@ We are considering a bug bounty program for the mainnet launch. Details TBA.
 - **Pre-funded accounts**: Development accounts (Alith, Baltathar, etc.) have known private keys
 - **Open RPC**: No authentication on RPC endpoints
 - **Single node**: No Byzantine Fault Tolerance
-- **Test chain ID**: Chain ID 1337 is for testing
+- **Test chain ID**: Chain ID 1251 is for testing
 - **No TLS**: Unencrypted RPC connections
 - **Sudo access**: Root-level access enabled
 
@@ -68,7 +68,7 @@ We are considering a bug bounty program for the mainnet launch. Details TBA.
 - **Secure keys**: All keys must be generated securely and stored in hardware wallets/HSM
 - **Authenticated RPC**: Implement authentication and rate limiting
 - **Multi-validator**: Minimum 3-4 validators for BFT
-- **Unique chain ID**: Register a unique chain ID (not 1337)
+- **Unique chain ID**: Register a unique chain ID (not 1251)
 - **TLS encryption**: All RPC endpoints must use HTTPS/WSS
 - **Remove sudo**: Disable sudo pallet for mainnet
 - **Monitoring**: Implement comprehensive monitoring and alerting

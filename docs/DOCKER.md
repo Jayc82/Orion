@@ -170,7 +170,7 @@ Or connect to the node directly:
 2. Add a new network with these settings:
    - Network Name: Orion Local
    - RPC URL: http://localhost:9933
-   - Chain ID: 1337
+   - Chain ID: 1251
    - Currency Symbol: ORN
    - Block Explorer: (leave empty for local)
 
